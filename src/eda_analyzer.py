@@ -106,21 +106,41 @@ if __name__ == "__main__":
 
         # 4. Basic Sentiment Distribution (if 'sentiment' column exists)
         if 'sentiment' in df.columns:
-            print("\n--- Sentiment Distribution ---")
-            sentiment_counts = df['sentiment'].value_counts()
-            print(sentiment_counts)
+           # --- Sentiment Distribution ---
+            if 'sentiment' in df.columns: # Original sentiment from dataset
+                print("\n--- Original Sentiment Distribution ---")
+                original_sentiment_counts = df['sentiment'].value_counts()
+                print(original_sentiment_counts)
 
-            plt.figure(figsize=(7, 5))
-            sns.countplot(x='sentiment', data=df, palette='pastel')
-            plt.title("Sentiment Distribution")
-            plt.xlabel("Sentiment")
-            plt.ylabel("Count")
-            plt.tight_layout()
-            plt.savefig(os.path.join(PLOTS_OUTPUT_DIR, "sentiment_distribution.png"))
-            print("Saved: sentiment_distribution.png")
-            plt.close()
-        else:
-            print("\n'sentiment' column not found. Skipping sentiment distribution plot.")
+                plt.figure(figsize=(7, 5))
+                sns.countplot(x='sentiment', data=df, palette='pastel')
+                plt.title("Original Sentiment Distribution")
+                plt.xlabel("Sentiment")
+                plt.ylabel("Count")
+                plt.tight_layout()
+                plt.savefig(os.path.join(PLOTS_OUTPUT_DIR, "original_sentiment_distribution.png"))
+                print("Saved: original_sentiment_distribution.png")
+                plt.close()
+            else:
+                print("\n'sentiment' column not found for original distribution.")
+
+            # VADER Sentiment Distribution (this should now always be present)
+            if 'vader_sentiment' in df.columns:
+                print("\n--- VADER Sentiment Distribution ---")
+                vader_sentiment_counts = df['vader_sentiment'].value_counts()
+                print(vader_sentiment_counts)
+
+                plt.figure(figsize=(7, 5))
+                sns.countplot(x='vader_sentiment', data=df, palette='coolwarm') # Using a different palette
+                plt.title("VADER Sentiment Distribution")
+                plt.xlabel("Sentiment")
+                plt.ylabel("Count")
+                plt.tight_layout()
+                plt.savefig(os.path.join(PLOTS_OUTPUT_DIR, "vader_sentiment_distribution.png"))
+                print("Saved: vader_sentiment_distribution.png")
+                plt.close()
+            else:
+                print("\n'vader_sentiment' column not found. VADER analysis might not have run.")
 
 
         print("\nEDA complete. Check the 'output/plots' directory for generated graphs.")

@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import os
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 # --- Configuration ---
 # Assuming you moved the file directly into data/raw/
@@ -56,6 +57,11 @@ def lemmatize_text(words):
     lemmatizer = WordNetLemmatizer()
     return [lemmatizer.lemmatize(word) for word in words]
 
+def get_vader_sentiment(text):
+    """Calculates VADER sentiment scores for a given text."""
+    analyzer = SentimentIntensityAnalyzer()
+    return analyzer.polarity_scores(text)
+
 
 # --- Preprocessing Pipeline ---
 def preprocess_pipeline(df, text_column='review'):
@@ -75,6 +81,16 @@ def preprocess_pipeline(df, text_column='review'):
 
     # Convert list of lemmas back to string for easier storage/analysis if needed
     df['processed_text'] = df['lemmas'].apply(lambda x: ' '.join(x))
+    # Apply VADER sentiment analysis to the cleaned text
+    df['vader_scores'] = df['cleaned_review'].apply(get_vader_sentiment)
+    # Extract compound score for simplicity
+    df['vader_compound_score'] = df['vader_scores'].apply(lambda x: x['compound'])
+
+    # Classify sentiment based on compound score
+    # A common threshold: >0.05 is positive, <-0.05 is negative, else neutral
+    df['vader_sentiment'] = df['vader_compound_score'].apply(
+        lambda score: 'positive' if score >= 0.05 else ('negative' if score <= -0.05 else 'neutral')
+    )
 
     print("Preprocessing complete.")
     return df
