@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+env/
+venv/
+# Virtual environment (conda)
+.conda/
+.env/
+*.egg-info/
+dist/
+build/
+*.so
+.pytest_cache/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Data
+*.csv
+*.txt
+*.json
+# (We'll decide later if we want to commit raw data or keep it ignored. For now, let's keep it out until processed)
+data/raw/
+data/processed/
+
+# Logs
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints/
